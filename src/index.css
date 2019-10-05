@@ -1,13 +1,92 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.App {
+  padding-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+.west {
+  border-left: 1px solid red;
+}
+.north {
+  border-top: 1px solid red;
+}
+
+.south_red {
+  border-bottom: 1px solid red;
+}
+
+.east_red {
+  border-right: 1px solid red;
+}
+
+.west_green {
+  border-left: 1px solid green;
+}
+.north_green {
+  border-top: 1px solid green;
+}
+
+.south_green {
+  border-bottom: 1px solid green;
+}
+
+.east_green {
+  border-right: 1px solid green;
+}
+
+.table {
+  display: grid;
+  border-bottom: 1px solid red;
+  border-right: 1px solid red;
+}
+.cell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.cell .overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  animation: success 0.4s ease-in-out;
+  border-radius: 2px;
+}
+.cell .overlay.err {
+  animation: error 0.4s ease-out;
+}
+
+@keyframes error {
+  from {
+    background-color: rgba(211, 9, 9, 0.521);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+@keyframes success {
+  from {
+    background-color: rgba(9, 211, 60, 0.521);
+  }
+  to {
+    background-color: transparent;
+  }
 }
