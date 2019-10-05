@@ -1,0 +1,16 @@
+{
+  "editor.rulers": [100, 200],
+  "editor.formatOnSave": true,
+  "prettier.semi": false,
+  "prettier.arrowParens": "avoid",
+  "prettier.printWidth": 100,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true }
+  ],
+  "workbench.colorCustomizations": {
+    "editorRuler.foreground": "#b4b4b413"
+  }
+}

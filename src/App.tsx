@@ -32,17 +32,16 @@ type MazeData = {
 
 const Char = ({
   index,
-  current
+  current,
+  keyPressed
 }: {
   index: number
-  current: { position: number; wasValid: boolean; keyPressed: { key: string; last: number } }
+  current: number
+  keyPressed: { key: string; last: number }
 }) =>
-  index === current.position ? (
+  index === current ? (
     <>
-      <span
-        key={current.keyPressed.last}
-        className={`overlay ${current.wasValid && index === current.position ? '' : 'err'}`}
-      ></span>
+      <span className={`overlay ${keyPressed.last === 0 ? '' : 'err'}`}></span>
       <b>P</b>
     </>
   ) : index === seed.domokun[0] ? (
@@ -53,86 +52,139 @@ const Char = ({
     <>{index}</>
   )
 
-const getValidMoves = ({ data, size }: MazeData) => {
-  const maxIndex = seed.data.length - 1
-  const [rowLength] = seed.size // rowLength * colLength - 1;
-  return data.map((cell, index) => {
+const getValidMoves = (cells: Directions[][], rowLength: number) => {
+  const maxIndex = cells.length - 1
+  return cells.map((cell, index) => {
     let validMoves = borders.filter(b => !cell.includes(b))
-    if (index < maxIndex - rowLength + 1 && !data[index + 15].includes(directions.north)) {
+    if (index < maxIndex - rowLength + 1 && !cells[index + 15].includes(directions.north)) {
       validMoves.push(directions.south)
     }
-    if (!(index % rowLength === rowLength - 1) && !data[index + 1].includes(directions.west)) {
+    if (!(index % rowLength === rowLength - 1) && !cells[index + 1].includes(directions.west)) {
       validMoves.push(directions.east)
     }
     return validMoves
   })
 }
 
+type Actions = 'MOVE_NORTH' | 'MOVE_SOUTH' | 'MOVE_EAST' | 'MOVE_WEST'
+
+const ACTIONS: {
+  [k in Actions]: k
+} = {
+  MOVE_WEST: 'MOVE_WEST',
+  MOVE_NORTH: 'MOVE_NORTH',
+  MOVE_EAST: 'MOVE_EAST',
+  MOVE_SOUTH: 'MOVE_SOUTH'
+}
+
+type AppState = {
+  maze: Directions[][]
+  rowLength: number
+  colLength: number
+  position: number
+  domokun: number
+  end: number
+  status: string
+}
+
+function reducer(state: AppState, action: Actions) {
+  switch (action) {
+    case ACTIONS.MOVE_WEST:
+      return {
+        ...state,
+        position: state.position - 1
+      }
+    case ACTIONS.MOVE_NORTH:
+      return {
+        ...state,
+        position: state.position - state.rowLength
+      }
+    case ACTIONS.MOVE_EAST:
+      return {
+        ...state,
+        position: state.position + 1
+      }
+    case ACTIONS.MOVE_SOUTH:
+      return {
+        ...state,
+        position: state.position + state.rowLength
+      }
+    default:
+      return state
+  }
+}
+
 const useMove = (seed: MazeData) => {
-  const [{ position, wasValid }, setCurrent] = React.useState<{
-    position: number
-    wasValid: boolean
-  }>({
+  const [state, update] = React.useReducer(reducer, {
+    maze: seed.data,
+    rowLength: seed.size[0],
+    colLength: seed.size[1],
     position: seed.pony[0],
-    wasValid: false
+    domokun: seed.domokun[0],
+    end: seed['end-point'][0],
+    status: seed['game-state'].state
   })
-  const [keyPressed, setKeyPressed] = React.useState({ key: '', last: 0 })
-  const validMoves = React.useMemo(() => getValidMoves(seed as MazeData), [seed])
+  const validMoves = React.useMemo(() => getValidMoves(state.maze, state.rowLength), [
+    state.maze,
+    state.rowLength
+  ])
+  const [keyPressed, setKeyPressed] = React.useState({ key: '', last: Date.now() })
 
   React.useEffect(() => {
     const setKey = ({ key }: KeyboardEvent) => setKeyPressed({ key, last: Date.now() })
-
     window.addEventListener('keydown', setKey)
     return () => window.removeEventListener('keydown', setKey)
   }, [])
 
   React.useEffect(() => {
-    if (keyPressed.key === 'ArrowLeft' && validMoves[position].includes(directions.west)) {
-      setCurrent(c => ({
-        position: c.position - 1,
-        wasValid: true
-      }))
-    } else if (keyPressed.key === 'ArrowUp' && validMoves[position].includes(directions.north)) {
-      setCurrent(c => ({
-        position: c.position - 15,
-        wasValid: true
-      }))
-    } else if (keyPressed.key === 'ArrowRight' && validMoves[position].includes(directions.east)) {
-      setCurrent(c => ({
-        position: c.position + 1,
-        wasValid: true
-      }))
-    } else if (keyPressed.key === 'ArrowDown' && validMoves[position].includes(directions.south)) {
-      setCurrent(c => ({
-        position: c.position + 15,
-        wasValid: true
-      }))
+    if (keyPressed.key === 'ArrowLeft' && validMoves[state.position].includes(directions.west)) {
+      update(ACTIONS.MOVE_WEST)
+      setKeyPressed({ key: '', last: 0 })
+    } else if (
+      keyPressed.key === 'ArrowUp' &&
+      validMoves[state.position].includes(directions.north)
+    ) {
+      update(ACTIONS.MOVE_NORTH)
+      setKeyPressed({ key: '', last: 0 })
+    } else if (
+      keyPressed.key === 'ArrowRight' &&
+      validMoves[state.position].includes(directions.east)
+    ) {
+      update(ACTIONS.MOVE_EAST)
+      setKeyPressed({ key: '', last: 0 })
+    } else if (
+      keyPressed.key === 'ArrowDown' &&
+      validMoves[state.position].includes(directions.south)
+    ) {
+      update(ACTIONS.MOVE_SOUTH)
+      setKeyPressed({ key: '', last: 0 })
     } else {
-      setCurrent(c => ({
-        ...c,
-        wasValid: false
-      }))
+      setKeyPressed({ key: '', last: Date.now() })
     }
-  }, [keyPressed])
+  }, [keyPressed.key, state.position, validMoves])
 
-  return { position, wasValid, keyPressed }
+  return { state, keyPressed }
 }
 
 const App: React.FC = () => {
-  const [maze, setMaze] = React.useState(seed.data as Directions[][])
-  const current = useMove(seed as MazeData)
+  const { state, keyPressed } = useMove(seed as MazeData)
   return (
     <div className='App'>
       <div
         className='table'
         style={{
-          gridTemplateColumns: `repeat(${seed.size[0]}, 42px)`,
-          gridTemplateRows: `repeat(${seed.size[1]}, 42px)`
+          gridTemplateColumns: `repeat(${state.rowLength}, 42px)`,
+          gridTemplateRows: `repeat(${state.colLength}, 42px)`
         }}
       >
-        {(seed as MazeData).data.map((cell, index) => (
+        {state.maze.map((cell, index) => (
           <div key={`cell-${index}`} className={`cell ${cell.join(' ')} `}>
-            <Char index={index} current={current} />
+            <Char
+              index={index}
+              current={state.position}
+              keyPressed={keyPressed}
+              key={keyPressed.last}
+            />
           </div>
         ))}
       </div>
