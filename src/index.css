@@ -15,6 +15,7 @@ code {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 
 .App-link {
@@ -89,4 +90,19 @@ code {
   to {
     background-color: transparent;
   }
+}
+.new-maze {
+  padding: 1rem;
+}
+.new-maze label {
+  margin-right: 0.5rem;
+}
+.new-maze select {
+  margin-left: 4px;
+}
+.new-maze button {
+  margin: 0.5rem;
+}
+.top {
+  padding: 10px;
 }
