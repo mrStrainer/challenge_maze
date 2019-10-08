@@ -1,5 +1,5 @@
-import { Directions } from "../types"
-import { borders, directions } from "../constants"
+import { Directions, ArrowKeys } from "../types"
+import { borders, directions, arrows } from "../constants"
 
 //https://ponychallenge.trustpilot.com/pony-challenge/eW91X3NhdmVkX3RoZV9wb255.jpg
 
@@ -19,4 +19,8 @@ export const getValidMoves = (cells: Directions[][], rowLength: number) => {
     }
     return validMoves
   })
+}
+
+export function isArrowKey(key: string): key is ArrowKeys {
+  return arrows.includes(key)
 }

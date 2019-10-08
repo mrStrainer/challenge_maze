@@ -36,25 +36,32 @@ function reducer(state: AppState, action: Actions) {
         ...state,
         status: action.payload
       }
+    case ACTIONS.UPDATE_MAZE:
+      return {
+        ...state,
+        position: action.payload.pony[0],
+        domokun: action.payload.domokun[0],
+        status: action.payload['game-state'],
+        loading: false,
+        lastMove: action.payload.lastMove
+      }
     case ACTIONS.INVALID_MOVE:
       return {
         ...state,
         lastMove: Date.now()
       }
     case ACTIONS.INITIALIZE_MAZE:
-      const { payload } = action
-      console.log({ payload })
       return {
         ...state,
-        maze: payload.data,
-        rowLength: payload.size[0],
-        colLength: payload.size[1],
-        position: payload.pony[0],
-        domokun: payload.domokun[0],
-        end: payload['end-point'][0],
-        status: payload['game-state'],
-        initialized: true,
-        mazeId: payload.maze_id,
+        maze: action.payload.data,
+        rowLength: action.payload.size[0],
+        colLength: action.payload.size[1],
+        position: action.payload.pony[0],
+        domokun: action.payload.domokun[0],
+        end: action.payload['end-point'][0],
+        status: action.payload['game-state'],
+        mazeId: action.payload.maze_id,
+        loading: false,
         lastMove: 0
       }
     default:

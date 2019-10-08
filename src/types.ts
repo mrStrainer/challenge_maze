@@ -8,10 +8,7 @@ export type MazeData = {
   difficulty: number
   data: Directions[][]
   maze_id: string
-  'game-state': {
-    state: string
-    'state-result': string
-  }
+  'game-state': GameState
 }
 
 export type GameState = {
@@ -20,25 +17,32 @@ export type GameState = {
   'hidden-url'?: string //TODO show when 'won'
 }
 
-export type ActionTypes =
+export type ArrowActionTypes =
   | 'MOVE_NORTH'
   | 'MOVE_SOUTH'
   | 'MOVE_EAST'
   | 'MOVE_WEST'
+
+export type InvalidMoveTyoe = 'INVALID_MOVE'
+
+export type ActionTypes =
   | 'SET_LOADING'
   | 'INITIALIZE_MAZE'
   | 'SET_GAME_STATE'
-  | 'INVALID_MOVE'
+  | 'UPDATE_MAZE'
+
+export type AllActionTypes = ArrowActionTypes | InvalidMoveTyoe | ActionTypes
 
 export type Actions =
   | { type: 'MOVE_NORTH' }
   | { type: 'MOVE_SOUTH' }
   | { type: 'MOVE_EAST' }
   | { type: 'MOVE_WEST' }
-  | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'INITIALIZE_MAZE'; payload: MazeData }
-  | { type: 'SET_GAME_STATE'; payload: GameState }
   | { type: 'INVALID_MOVE' }
+  | { type: 'SET_LOADING', payload: boolean }
+  | { type: 'INITIALIZE_MAZE', payload: MazeData }
+  | { type: 'SET_GAME_STATE', payload: GameState }
+  | { type: 'UPDATE_MAZE', payload: MazeData & { lastMove: number } }
 
 
 export type AppState = {
@@ -48,10 +52,7 @@ export type AppState = {
   position: number
   domokun: number
   end: number
-  status: {
-    state: 'Active' | 'won' | string
-    'state-result': 'Successfully created' | 'You won. Game ended' | 'Move accepted' | string
-  }
+  status: GameState
   loading: boolean
   mazeId: string
   lastMove: number
@@ -74,4 +75,9 @@ export type NewMaze = {
 
 export type PossibleDirections = {
   [k in Directions]: k
+}
+export type ArrowKeys = 'ArrowLeft' | 'ArrowUp' | 'ArrowRight' | 'ArrowDown'
+
+export type ArrowDirections = {
+  [k in ArrowKeys]: Directions
 }
