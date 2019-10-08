@@ -1,18 +1,5 @@
-import { Directions, MazeData } from '../components/Maze'
+import { mazeOptions, NewMaze, MazeData, Directions } from "../types"
 
-type mazeOptions = {
-  "maze-width": number,
-  "maze-height": number,
-  "maze-player-name": string,
-  "difficulty": number
-} | PostDirection | null
-
-type PostDirection = {
-  direction: Directions
-}
-type NewMaze = {
-  maze_id: string
-}
 const METHOD = {
   GET: 'GET',
   POST: 'POST'

@@ -28,30 +28,6 @@ code {
 .north {
   border-top: 1px solid red;
 }
-
-.south_red {
-  border-bottom: 1px solid red;
-}
-
-.east_red {
-  border-right: 1px solid red;
-}
-
-.west_green {
-  border-left: 1px solid green;
-}
-.north_green {
-  border-top: 1px solid green;
-}
-
-.south_green {
-  border-bottom: 1px solid green;
-}
-
-.east_green {
-  border-right: 1px solid green;
-}
-
 .table {
   display: grid;
   border-bottom: 1px solid red;
