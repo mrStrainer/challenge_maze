@@ -1,54 +1,52 @@
 import React from 'react'
 import Cell from './Cell'
-import { ACTIONS } from '../constants'
-import { AppState, Actions } from '../types'
+import { ACTIONS, directions } from '../constants'
+import { AppState, Actions, Directions } from '../types'
 import * as api from '../api'
 import { useMove } from '../hooks/move'
+import { getValidMoves, getImageUrl } from '../api/utils'
+
+function move({ position, validMoves, rowLength }: AppState, direction: Directions) {
+  let lastMove = Date.now()
+  let newPosition = position
+  if (validMoves[position].includes(direction)) {
+    lastMove = 0
+    switch (direction) {
+      case directions.west:
+        newPosition -= 1
+        break
+      case directions.north:
+        newPosition -= rowLength
+        break
+      case directions.east:
+        newPosition += 1
+        break
+      case directions.south:
+        newPosition += rowLength
+        break
+    }
+  }
+  return {
+    lastMove,
+    position: newPosition
+  }
+}
 
 function reducer(state: AppState, action: Actions) {
   switch (action.type) {
-    case ACTIONS.MOVE_WEST:
+    case ACTIONS.MOVE:
       return {
         ...state,
-        position: state.position - 1,
-        lastMove: 0
-      }
-    case ACTIONS.MOVE_NORTH:
-      return {
-        ...state,
-        position: state.position - state.rowLength,
-        lastMove: 0
-      }
-    case ACTIONS.MOVE_EAST:
-      return {
-        ...state,
-        position: state.position + 1,
-        lastMove: 0
-      }
-    case ACTIONS.MOVE_SOUTH:
-      return {
-        ...state,
-        position: state.position + state.rowLength,
-        lastMove: 0
-      }
-    case ACTIONS.SET_GAME_STATE:
-      return {
-        ...state,
-        status: action.payload
+        ...move(state, action.payload)
       }
     case ACTIONS.UPDATE_MAZE:
       return {
         ...state,
+        lastMove: state.position !== action.payload.pony[0] ? 0 : Date.now(),
         position: action.payload.pony[0],
         domokun: action.payload.domokun[0],
         status: action.payload['game-state'],
-        loading: false,
-        lastMove: action.payload.lastMove
-      }
-    case ACTIONS.INVALID_MOVE:
-      return {
-        ...state,
-        lastMove: Date.now()
+        loading: false
       }
     case ACTIONS.INITIALIZE_MAZE:
       return {
@@ -61,6 +59,7 @@ function reducer(state: AppState, action: Actions) {
         end: action.payload['end-point'][0],
         status: action.payload['game-state'],
         mazeId: action.payload.maze_id,
+        validMoves: getValidMoves(state.maze, state.rowLength),
         loading: false,
         lastMove: 0
       }
@@ -69,22 +68,31 @@ function reducer(state: AppState, action: Actions) {
   }
 }
 
-const Maze = ({ id }: { id: string | null }) => {
-  const [state, update] = React.useReducer(reducer, {
-    maze: [],
-    rowLength: 0,
-    colLength: 0,
-    position: 0,
-    domokun: 0,
-    end: 0,
-    status: {
-      state: 'Inactive',
-      'state-result': 'Not loaded'
-    },
-    loading: false,
-    mazeId: '',
-    lastMove: 0
-  })
+const initialState = {
+  maze: [],
+  rowLength: 0,
+  colLength: 0,
+  position: 0,
+  domokun: 0,
+  end: 0,
+  status: {
+    state: 'Inactive',
+    'state-result': 'Not loaded',
+    'hidden-url': undefined
+  },
+  loading: false,
+  mazeId: '',
+  validMoves: [],
+  lastMove: 0
+}
+
+type Props = {
+  id: string | null
+}
+
+const Maze: React.FC<Props> = ({ id }) => {
+  const [state, update] = React.useReducer(reducer, initialState)
+  useMove(state, update)
 
   React.useEffect(() => {
     update({ type: 'SET_LOADING', payload: true })
@@ -96,10 +104,13 @@ const Maze = ({ id }: { id: string | null }) => {
     }
   }, [id])
 
-  useMove(state, update)
-  return state.loading ? (
-    <div className='top'>{'Loading...'}</div>
-  ) : (
+  if (state.loading) {
+    return <div className='top'>{'Loading...'}</div>
+  }
+  if (state.status['hidden-url']) {
+    return <img src={getImageUrl(state.status['hidden-url'])} alt='Game ended' className='image' />
+  }
+  return (
     <>
       <div
         className='table'
@@ -120,9 +131,7 @@ const Maze = ({ id }: { id: string | null }) => {
           </div>
         ))}
       </div>
-      <div className='top'>
-        {state.status.state} - {state.status['state-result']}
-      </div>
+      <div className='top'>{state.status['state-result']}</div>
     </>
   )
 }

@@ -8,27 +8,19 @@ const initialState = {
   name: 'Twilight Sparkle',
   difficulty: 0,
   width: 15,
-  height: 15
+  height: 15,
+  error: undefined as unknown
 }
+
 type FormState = typeof initialState
 
 type Action =
-  | {
-      type: 'SELECT_WIDTH'
-      payload: number
-    }
-  | {
-      type: 'SELECT_HEIGHT'
-      payload: number
-    }
-  | {
-      type: 'SELECT_DIFFICULTY'
-      payload: number
-    }
-  | {
-      type: 'SELECT_NAME'
-      payload: string
-    }
+  | { type: 'SELECT_WIDTH'; payload: number }
+  | { type: 'SELECT_HEIGHT'; payload: number }
+  | { type: 'SELECT_DIFFICULTY'; payload: number }
+  | { type: 'SELECT_NAME'; payload: string }
+  | { type: 'SET_STATE'; payload: Partial<FormState> }
+
 function reducer(state: FormState, action: Action) {
   switch (action.type) {
     case 'SELECT_WIDTH':
@@ -51,10 +43,14 @@ function reducer(state: FormState, action: Action) {
         ...state,
         name: action.payload
       }
+    case 'SET_STATE':
+      return {
+        ...state,
+        ...action.payload
+      }
     default:
-      break
+      return state
   }
-  return state
 }
 
 type Props = {
@@ -73,7 +69,7 @@ const NewMaze: React.FC<Props> = ({ setMaze, changeView }) => {
         setMaze(maze_id)
         changeView('MAZE')
       })
-      .catch(console.log)
+      .catch(async e => dispatch({ type: 'SET_STATE', payload: { error: await e.text() } }))
   }
   return (
     <form onSubmit={handleSubmit} className='new-maze'>

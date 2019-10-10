@@ -8,10 +8,10 @@ const App: React.FC = () => {
     mazeId === null ? 'NEW_MAZE' : 'MAZE'
   )
   return (
-    <div className='App'>
+    <div className='container'>
       <div className='top'>
         <button onClick={e => setCurrentView(view => (view === 'MAZE' ? 'NEW_MAZE' : 'MAZE'))}>
-          {currentView === 'MAZE' ? 'New Maze' : 'Maze'}
+          {currentView === 'MAZE' ? <>New Maze &rarr;</> : <>&larr; Maze</>}
         </button>
       </div>
       {currentView === 'MAZE' && <Maze id={mazeId} />}

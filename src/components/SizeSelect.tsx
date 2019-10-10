@@ -1,8 +1,7 @@
 import React from 'react'
+import { SIZES } from '../constants'
 
-const sizes = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
-
-const SizeOptions = sizes.map(size => (
+const SizeOptions = SIZES.map(size => (
   <option key={size} value={size}>
     {size}
   </option>
@@ -16,7 +15,7 @@ type Props = {
 
 const SizeSelect: React.FC<Props> = ({ dispatch, width, height }) => {
   return (
-    <>
+    <div className='top'>
       <label htmlFor='width'>
         Width:
         <select
@@ -49,7 +48,7 @@ const SizeSelect: React.FC<Props> = ({ dispatch, width, height }) => {
           {SizeOptions}
         </select>
       </label>
-    </>
+    </div>
   )
 }
 

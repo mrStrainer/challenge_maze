@@ -1,16 +1,23 @@
-import { Directions, PossibleDirections, ArrowDirections, ArrowKeys, AllActionTypes, ArrowActionTypes } from "./types";
+import { Directions, PossibleDirections, ArrowDirections, ActionTypes } from "./types";
+
+export const CHARACTERS = [
+  'Twilight Sparkle',
+  'Applejack',
+  'Fluttershy',
+  'Rarity',
+  'Pinkie Pie',
+  'Rainbow Dash',
+  'Spike'
+]
+
+export const SIZES = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
 
 export const ACTIONS: {
-  [k in AllActionTypes]: k
+  [k in ActionTypes]: k
 } = {
-  MOVE_WEST: 'MOVE_WEST',
-  MOVE_NORTH: 'MOVE_NORTH',
-  MOVE_EAST: 'MOVE_EAST',
-  MOVE_SOUTH: 'MOVE_SOUTH',
+  MOVE: 'MOVE',
   INITIALIZE_MAZE: 'INITIALIZE_MAZE',
   SET_LOADING: 'SET_LOADING',
-  SET_GAME_STATE: 'SET_GAME_STATE',
-  INVALID_MOVE: 'INVALID_MOVE',
   UPDATE_MAZE: 'UPDATE_MAZE'
 }
 
@@ -29,13 +36,5 @@ export const arrowDirections: ArrowDirections = {
   ArrowRight: 'east',
   ArrowDown: 'south'
 }
-export const arrows = ['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown']
 
-export const ARROW_ACTIONS: {
-  [k in ArrowKeys]: ArrowActionTypes
-} = {
-  ArrowLeft: 'MOVE_WEST',
-  ArrowUp: 'MOVE_NORTH',
-  ArrowRight: 'MOVE_EAST',
-  ArrowDown: 'MOVE_SOUTH',
-}
+export const arrows = ['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown']

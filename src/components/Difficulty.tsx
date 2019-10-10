@@ -7,21 +7,23 @@ type Props = {
 
 const Difficulty: React.FC<Props> = ({ dispatch, difficulty }) => {
   return (
-    <label htmlFor='difficulty'>
-      Difficulty
-      <input
-        type='number'
-        name='difficulty'
-        id='difficulty'
-        value={difficulty}
-        onChange={e =>
-          dispatch({
-            type: 'SELECT_DIFFICULTY',
-            payload: e.target.value
-          })
-        }
-      />
-    </label>
+    <div className='top'>
+      <label htmlFor='difficulty'>
+        Difficulty
+        <input
+          type='number'
+          name='difficulty'
+          id='difficulty'
+          value={difficulty}
+          onChange={e =>
+            dispatch({
+              type: 'SELECT_DIFFICULTY',
+              payload: e.target.value
+            })
+          }
+        />
+      </label>
+    </div>
   )
 }
 

@@ -12,37 +12,22 @@ export type MazeData = {
 }
 
 export type GameState = {
-  state: 'Active' | 'won' | string
-  'state-result': 'Successfully created' | 'You won. Game ended' | 'Move accepted' | string
-  'hidden-url'?: string //TODO show when 'won'
+  state: 'Active' | 'won' | 'over' | string
+  'state-result': 'Successfully created' | 'You won. Game ended' | 'Move accepted' | 'You lost. Killed by monster' | string
+  'hidden-url'?: string
 }
 
-export type ArrowActionTypes =
-  | 'MOVE_NORTH'
-  | 'MOVE_SOUTH'
-  | 'MOVE_EAST'
-  | 'MOVE_WEST'
-
-export type InvalidMoveTyoe = 'INVALID_MOVE'
-
 export type ActionTypes =
+  | 'MOVE'
   | 'SET_LOADING'
   | 'INITIALIZE_MAZE'
-  | 'SET_GAME_STATE'
   | 'UPDATE_MAZE'
 
-export type AllActionTypes = ArrowActionTypes | InvalidMoveTyoe | ActionTypes
-
 export type Actions =
-  | { type: 'MOVE_NORTH' }
-  | { type: 'MOVE_SOUTH' }
-  | { type: 'MOVE_EAST' }
-  | { type: 'MOVE_WEST' }
-  | { type: 'INVALID_MOVE' }
+  | { type: 'MOVE', payload: Directions }
   | { type: 'SET_LOADING', payload: boolean }
   | { type: 'INITIALIZE_MAZE', payload: MazeData }
-  | { type: 'SET_GAME_STATE', payload: GameState }
-  | { type: 'UPDATE_MAZE', payload: MazeData & { lastMove: number } }
+  | { type: 'UPDATE_MAZE', payload: MazeData }
 
 
 export type AppState = {
@@ -55,6 +40,7 @@ export type AppState = {
   status: GameState
   loading: boolean
   mazeId: string
+  validMoves: Directions[][]
   lastMove: number
 }
 

@@ -18,9 +18,7 @@ const status = async (res: Response) => {
   if (!res.ok) {
     throw res
   }
-  const response = await res.json()
-  console.log(response)
-  return response
+  return res.json()
 }
 
 export function createMaze({ width = 15, height = 15, name = 'Twilight Sparkle', difficulty = 0 }): Promise<NewMaze> {
