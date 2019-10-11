@@ -10,9 +10,10 @@ type Props = {
 
 const Cell: React.FC<Props> = ({ index, domokun, end, current, lastMove }) =>
   index === current ? (
-    <span key={lastMove} className={`overlay ${lastMove === 0 ? '' : 'err'}`}>
+    <>
       <b>P</b>
-    </span>
+      <span key={lastMove} className={`overlay ${lastMove === 0 ? '' : 'err'}`}></span>
+    </>
   ) : index === domokun ? (
     <span className='D'>D</span>
   ) : index === end ? (
