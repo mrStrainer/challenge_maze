@@ -119,7 +119,6 @@ input {
   background-color: #111;
   margin-left: 5px;
 }
-
 select {
   border: none;
 }
@@ -127,12 +126,6 @@ select {
 input#difficulty {
   border: none;
 }
-
 label {
   font-size: 14px;
 }
-/* @media (max-width: 500px), (max-height: 500px) {
-  .table {
-    font-size: 0.8rem;
-  }
-} */
