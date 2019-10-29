@@ -115,8 +115,8 @@ const Maze: React.FC<Props> = ({ id }) => {
       <div
         className='table'
         style={{
-          gridTemplateColumns: `repeat(${state.rowLength}, 42px)`,
-          gridTemplateRows: `repeat(${state.colLength}, 42px)`
+          gridTemplateColumns: `repeat(${state.rowLength}, minmax(1.5vmin,5.5vmin))`,
+          gridTemplateRows: `repeat(${state.colLength}, minmax(1.5vmin,5.5vmin))`
         }}
       >
         {state.maze.map((cell, index) => (

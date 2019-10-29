@@ -24,6 +24,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  height: calc(100vh - 80px);
 }
 
 a {
@@ -41,7 +42,10 @@ a:hover {
   border-top: 1px solid var(--tableBorderColor);
 }
 .table {
+  max-width: 95%;
+  max-height: 95%;
   display: grid;
+  font-size: 2vmin;
   border-bottom: 1px solid var(--tableBorderColor);
   border-right: 1px solid var(--tableBorderColor);
 }
@@ -95,7 +99,8 @@ a:hover {
   padding: 10px;
 }
 .image {
-  max-width: 100vw;
+  max-width: 90vw;
+  margin: 20px auto;
 }
 .D {
   color: var(--errorColor);
@@ -126,3 +131,8 @@ input#difficulty {
 label {
   font-size: 14px;
 }
+/* @media (max-width: 500px), (max-height: 500px) {
+  .table {
+    font-size: 0.8rem;
+  }
+} */
